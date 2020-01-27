@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5143ad3c-953b-4113-a387-d32e75675f2f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Signup.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Signup.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Signup.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -47,8 +46,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Signup.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="154">
-              <caret line="63" lean-forward="true" selection-start-line="63" selection-end-line="63" />
+            <state relative-caret-position="251">
+              <caret line="100" lean-forward="true" selection-start-line="100" selection-end-line="100" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
               </folding>
@@ -68,6 +67,7 @@
       <find>color : &quot;blue&quot;</find>
       <find>customTheme</find>
       <find>withStyles</find>
+      <find>paper</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -148,12 +148,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1580134932825</updated>
-      <workItem from="1580134934887" duration="8785000" />
+      <workItem from="1580134934887" duration="11622000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="8785000" />
+    <option name="totallyTimeSpent" value="11622000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -165,7 +165,7 @@
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" />
-      <window_info active="true" anchor="bottom" id="Terminal" visible="true" weight="0.036144577" />
+      <window_info active="true" anchor="bottom" id="Terminal" visible="true" weight="0.14096385" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
@@ -205,8 +205,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Signup.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="63" lean-forward="true" selection-start-line="63" selection-end-line="63" />
+        <state relative-caret-position="251">
+          <caret line="100" lean-forward="true" selection-start-line="100" selection-end-line="100" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
           </folding>
