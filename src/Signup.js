@@ -1,7 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Container, Grid, Link, Checkbox, FormControlLabel, TextField, CssBaseline, FormHelperText, Button } from '@material-ui/core'
+import { Container, Grid, Link, Checkbox, FormControlLabel,
+    TextField, CssBaseline, FormHelperText, Button, CircularProgress, Snackbar
+} from '@material-ui/core'
 
+import MuiAlert from '@material-ui/lab/Alert';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -9,6 +12,14 @@ import {
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 import {DropzoneArea} from 'material-ui-dropzone'
+
+import { connect } from 'react-redux';
+
+import { signup } from './actions';
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -51,17 +62,17 @@ const useStyles = makeStyles(theme => ({
 
 
 
-export default function SignUp() {
+const SignUp = (props) => {
     const classes = useStyles();
     // The first commit of Material-UI
     const [agreeToTerms, setAgreeToTerms] = React.useState(false);
     const [selectedDate, setSelectedDate] = React.useState(new Date('1994-06-27'));
-    const [uploadFile, setFiles] = React.useState([]);
+    const [uploadFile, setFiles] = React.useState(null);
     const [previewURL, setpreviewURL] = React.useState(null);
     const [userData, setUserData] = React.useState({
         email : '',
         password: '',
-        dob: '',
+        dob: selectedDate.toDateString(),
         contactNumber: '',
         address: '',
         securityAns1: '',
@@ -69,6 +80,7 @@ export default function SignUp() {
         securityAns3: ''
     });
     const [errorData, setErrorData] = React.useState({});
+    const [open, setOpen] = React.useState(false);
     const SignUpValidator = {
         email : {
             message : "We'll never share your email.",
@@ -85,6 +97,22 @@ export default function SignUp() {
             },
             validatorMessage : "provide an valid contact number"
         }
+    };
+
+    useEffect(()=>{
+        if(props.message) {
+            setOpen(true);
+        }
+    }, [props.message]);
+
+
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
     };
 
     const handleDateChange = date => {
@@ -132,15 +160,17 @@ export default function SignUp() {
             dob: selectedDate.toDateString(),
             image: uploadFile
         };
-        Object.keys(userPayload).map((key)=>{
+        Object.keys(userData).map((key)=>{
             if(userData[key] === '' || !userData[key]){
                 errorData[key] = "Field is required";
             }
         });
         if(Object.keys(errorData).length > 0) {
+            console.log("the error data length is : ", errorData);
             setErrorData({...errorData});
         } else {
-            console.log("Making an api call here", userPayload)
+            console.log("Making an api call here", userPayload);
+            props.signup(userPayload);
         }
 
     };
@@ -166,6 +196,14 @@ export default function SignUp() {
                 />
             </Grid>
             <Grid item md={8} xs={12}>
+                {props.message && <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}
+                  anchorOrigin={{
+                      vertical: 'top', horizontal: 'center'
+                  }}>
+                    <Alert onClose={handleClose} severity="success">
+                        {props.message}
+                    </Alert>
+                </Snackbar>}
                 <Container component="main" maxWidth="sm">
                     <CssBaseline />
                     <div className={classes.paper}>
@@ -284,6 +322,7 @@ export default function SignUp() {
                                         name="securityAns3"
                                         fullWidth
                                         label="Your first pet's name?"
+                                        onChange={handleFieldChange}
                                         error={isErrorState('securityAns3')}
                                     />
                                     {ErrorMessageDisplay('securityAns3')}
@@ -304,7 +343,8 @@ export default function SignUp() {
                                 className={classes.submit}
                                 disabled={!agreeToTerms}
                             >
-                                Sign Up
+                                {!props.isLoading && 'Sign Up'}
+                                {props.isLoading && <CircularProgress size={24} />}
                             </Button>
                             <Grid container justify="flex-end">
                                 <Grid item>
@@ -321,3 +361,18 @@ export default function SignUp() {
 
     );
 }
+
+const mapStateToProps = function(state) {
+    return {
+        isLoading: state.isLoading,
+        message: state.message
+    }
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        signup: data => dispatch(signup(data)),
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
