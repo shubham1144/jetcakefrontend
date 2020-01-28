@@ -1,18 +1,8 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import 'date-fns';
+import { Container, Grid, Link, Checkbox, FormControlLabel, TextField, CssBaseline, FormHelperText, Button } from '@material-ui/core'
 
+import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import {
     MuiPickersUtilsProvider,
@@ -20,23 +10,8 @@ import {
 } from '@material-ui/pickers';
 import {DropzoneArea} from 'material-ui-dropzone'
 
-
-function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
-                ShubhamChodankar
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
-
 const useStyles = makeStyles(theme => ({
     paper: {
-        // marginTop: theme.spacing(8),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -44,9 +19,6 @@ const useStyles = makeStyles(theme => ({
     paperMain: {
         margin: theme.spacing(8),
         marginTop : 0,
-        // display: 'flex',
-        // flexDirection: 'column',
-        // alignItems: 'center',
     },
     avatar: {
         margin: theme.spacing(1),
@@ -58,7 +30,7 @@ const useStyles = makeStyles(theme => ({
         margin: "9px",
     },
     form: {
-        width: '100%', // Fix IE 11 issue.
+        width: '100%',
         marginTop: theme.spacing(3),
     },
     submit: {
@@ -70,7 +42,6 @@ const useStyles = makeStyles(theme => ({
     },
     profileImage: {
         border : "none",
-        // margin: "14rem 4rem",
         background : "none"
     },
     profilePicContainer : {
@@ -79,19 +50,48 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
+
 export default function SignUp() {
     const classes = useStyles();
     // The first commit of Material-UI
-    const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
+    const [agreeToTerms, setAgreeToTerms] = React.useState(false);
+    const [selectedDate, setSelectedDate] = React.useState(new Date('1994-06-27'));
     const [uploadFile, setFiles] = React.useState([]);
     const [previewURL, setpreviewURL] = React.useState(null);
+    const [userData, setUserData] = React.useState({
+        email : '',
+        password: '',
+        dob: '',
+        contactNumber: '',
+        address: '',
+        securityAns1: '',
+        securityAns2: '',
+        securityAns3: ''
+    });
+    const [errorData, setErrorData] = React.useState({});
+    const SignUpValidator = {
+        email : {
+            message : "We'll never share your email.",
+            validator : (email)=>{
+                var re = /\S+@\S+\.\S+/;
+                return re.test(email);
+            },
+            validatorMessage : "provide an valid email"
+        },
+        contactNumber: {
+            validator : (number)=>{
+                var re = /[^A-Za-z]+/;
+                return re.test(number);
+            },
+            validatorMessage : "provide an valid contact number"
+        }
+    };
 
     const handleDateChange = date => {
         setSelectedDate(date);
     };
 
     const handleFileChange = files => {
-        // console.log("The file being uploaded is : ", files);
         var reader = new FileReader();
         reader.onload = function (e) {
             setFiles(files[0]);
@@ -99,7 +99,52 @@ export default function SignUp() {
         };
         reader.readAsDataURL(files[0]);
 
+    };
+
+    const handleFieldChange = (event, validator) => {
+        const { name, value } = event.target;
+        userData[name] = value;
+        setUserData(userData);
+        if(validator && !validator(value)) {
+            console.log("the vaidator value is : ", validator(value))
+            errorData[name] = SignUpValidator[name].validatorMessage || SignUpValidator[name].message;
+            setErrorData({...errorData});
+        }
+    };
+
+    const isErrorState = (value) => {
+        return errorData[value] !== undefined;
+    };
+
+    const ErrorMessageDisplay = (value) => {
+        return isErrorState(value) ?  (
+            <FormHelperText id="email-helper-text">{errorData[value]}</FormHelperText>
+        ) : null;
     }
+
+    const switchAgreeToTerms = (event) => {
+        setAgreeToTerms(event.target.checked);
+    }
+    const onSignUpSubmit = (e) => {
+        e.preventDefault();
+        const userPayload = {
+            ...userData,
+            dob: selectedDate.toDateString(),
+            image: uploadFile
+        };
+        Object.keys(userPayload).map((key)=>{
+            if(userData[key] === '' || !userData[key]){
+                errorData[key] = "Field is required";
+            }
+        });
+        if(Object.keys(errorData).length > 0) {
+            setErrorData({...errorData});
+        } else {
+            console.log("Making an api call here", userPayload)
+        }
+
+    };
+
     return (
         <Grid container spacing={1} className={classes.paperMain}>
             <Grid
@@ -124,30 +169,40 @@ export default function SignUp() {
                 <Container component="main" maxWidth="sm">
                     <CssBaseline />
                     <div className={classes.paper}>
-                        <form className={classes.form} noValidate>
+                        <form
+                            className={classes.form}
+                            onSubmit={onSignUpSubmit}
+                            noValidate
+                        >
                             <Grid container spacing={2}>
                                 <Grid item xs={12} md={6}>
                                     <TextField
                                         variant="outlined"
                                         required
+                                        error={isErrorState('email')}
                                         fullWidth
                                         id="email"
                                         label="Email Address"
                                         name="email"
                                         autoComplete="email"
+                                        onChange={(e)=> { handleFieldChange(e, SignUpValidator[e.target.name].validator)} }
                                     />
+                                    {ErrorMessageDisplay('email')}
                                 </Grid>
                                 <Grid item xs={12} md={6}>
-                                    <TextField
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        name="password"
-                                        label="Password"
-                                        type="password"
-                                        id="password"
-                                        autoComplete="current-password"
-                                    />
+                                        <TextField
+                                            variant="outlined"
+                                            required
+                                            error={isErrorState('password')}
+                                            fullWidth
+                                            name="password"
+                                            label="Password"
+                                            type="password"
+                                            id="password"
+                                            autoComplete="current-password"
+                                            onChange={handleFieldChange}
+                                        />
+                                    {ErrorMessageDisplay('password')}
                                 </Grid>
 
                                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -169,15 +224,18 @@ export default function SignUp() {
                                         />
                                     </Grid>
                                 </MuiPickersUtilsProvider>
-                                <Grid item item xs={12}>
+                                <Grid item xs={12}>
                                     <TextField
                                         variant="outlined"
                                         required
                                         fullWidth
-                                        name="telephone"
+                                        name="contactNumber"
                                         label="Contact Number"
-                                        id="telephone"
+                                        id="contactNumber"
+                                        onChange={(e)=> { handleFieldChange(e, SignUpValidator[e.target.name].validator)} }
+                                        error={isErrorState('contactNumber')}
                                     />
+                                    {ErrorMessageDisplay('contactNumber')}
                                 </Grid>
                                 <Grid item xs={12}>
                                     <TextField
@@ -187,43 +245,53 @@ export default function SignUp() {
                                         id="address"
                                         label="Address"
                                         name="address"
-                                        autoComplete="lname"
+                                        onChange={handleFieldChange}
+                                        error={isErrorState('address')}
                                     />
+                                    {ErrorMessageDisplay('address')}
                                 </Grid>
                                 <Grid item xs={12}>
                                     <TextField
                                         required
                                         variant="outlined"
-                                        id="filled-required"
+                                        id="securityAns1"
+                                        name="securityAns1"
                                         fullWidth
                                         label="Which school did you attend?"
-                                        defaultValue=""
+                                        onChange={handleFieldChange}
+                                        error={isErrorState('securityAns1')}
                                     />
+                                    {ErrorMessageDisplay('securityAns1')}
                                 </Grid>
                                 <Grid item xs={12}>
                                     <TextField
                                         required
                                         variant="outlined"
-                                        id="filled-required"
+                                        id="securityAns2"
+                                        name="securityAns2"
                                         fullWidth
                                         label="Where were you born?"
-                                        defaultValue=""
+                                        onChange={handleFieldChange}
+                                        error={isErrorState('securityAns2')}
                                     />
+                                    {ErrorMessageDisplay('securityAns2')}
                                 </Grid>
                                 <Grid item xs={12}>
                                     <TextField
                                         required
                                         variant="outlined"
-                                        id="filled-required"
+                                        id="securityAns3"
+                                        name="securityAns3"
                                         fullWidth
                                         label="Your first pet's name?"
-                                        defaultValue=""
+                                        error={isErrorState('securityAns3')}
                                     />
+                                    {ErrorMessageDisplay('securityAns3')}
                                 </Grid>
 
                                 <Grid item xs={12}>
                                     <FormControlLabel
-                                        control={<Checkbox value="allowExtraEmails" color="primary" />}
+                                        control={<Checkbox checked={agreeToTerms} onChange={switchAgreeToTerms} color="primary" />}
                                         label="I understand this is a jetcake coding test website"
                                     />
                                 </Grid>
@@ -234,6 +302,7 @@ export default function SignUp() {
                                 variant="contained"
                                 color="primary"
                                 className={classes.submit}
+                                disabled={!agreeToTerms}
                             >
                                 Sign Up
                             </Button>
