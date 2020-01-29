@@ -80,9 +80,9 @@ function UpdateProfileApi(payload) {
 
 function* updateProfile({payload}) {
     try {
-        let { updateProfileResponse } = yield call(UpdateProfileApi, payload);
+        let { data } = yield call(UpdateProfileApi, payload);
 
-        yield put (updateProfileSuccess(updateProfileResponse));
+        yield put (updateProfileSuccess(data));
 
     } catch (e) {
         let { message } = e.response.data;

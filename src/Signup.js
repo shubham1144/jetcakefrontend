@@ -49,6 +49,8 @@ const SignUp = (props) => {
             </Snackbar>}
             <UserDetails
                 onSuccess={props.signup}
+                mode={'add'}
+                isLoading={props.isLoading}
             />
         </Grid>
     );

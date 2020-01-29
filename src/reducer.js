@@ -25,7 +25,7 @@ function reducer(state = {
         case 'INITIATE_UPDATE_PROFILE':
             return {...state, isLoading: true, message: null};
         case 'UPDATE_PROFILE_SUCCESS':
-            return {...state, isLoading: false, message: null, profile: action.payload};
+            return {...state, isLoading: false, message: action.message};
         case 'UPDATE_PROFILE_FAILURE':
             return {...state, isLoading: false, message: action.message};
         default:

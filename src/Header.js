@@ -20,16 +20,19 @@ const Header = (props) => {
     const [loggedIn, setLoggedIn] = React.useState(false);
 
     useEffect(()=>{
-        if(localStorage.getItem("loggedIn") === "true") {
-            setLoggedIn(true);
+        if(localStorage.getItem("loggedIn") == 'true') {
+            setLoggedIn('true');
         }
     }, []);
 
     useEffect(()=>{
-        if(props.loggedIn) {
-            setLoggedIn(true);
-        }else {
-            setLoggedIn(false);
+        //used when header is alredy loaded and the user logs in
+        if(props.loggedIn !== loggedIn) {
+            if(props.loggedIn) {
+                setLoggedIn(true);
+            }else {
+                setLoggedIn(false);
+            }
         }
     }, [props.loggedIn]);
 
@@ -49,7 +52,7 @@ const Header = (props) => {
                                 profile
                             </Button>
                         </Link>
-                        <Button  color="primary" variant="outlined">
+                        <Button disabled color="primary" variant="outlined">
                             Signout
                         </Button>
                     </>

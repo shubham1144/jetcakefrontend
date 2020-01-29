@@ -71,7 +71,7 @@ export function updateProfile(payload) {
 export function updateProfileSuccess(payload) {
     return {
         type : 'UPDATE_PROFILE_SUCCESS',
-        payload
+        message: payload.message
     }
 }
 

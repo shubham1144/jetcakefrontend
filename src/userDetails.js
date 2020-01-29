@@ -15,6 +15,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import React, {useEffect} from "react";
 import {DropzoneArea} from "material-ui-dropzone";
 import {makeStyles, withStyles} from '@material-ui/core/styles';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 const CircularProgressStyled = withStyles({
     colorPrimary: {
@@ -59,9 +60,8 @@ const useStyles = makeStyles(theme => ({
 
 const UserDetails = (props)=>{
     const classes = useStyles();
-    const [mode, setMode] = React.useState(props.mode ? props.mode : 'add');
     const [agreeToTerms, setAgreeToTerms] = React.useState(false);
-    const [selectedDate, setSelectedDate] = React.useState(new Date('1994-06-27'));
+    const [selectedDate, setSelectedDate] = React.useState(new Date());
     const [uploadFile, setFiles] = React.useState(null);
     const [previewURL, setpreviewURL] = React.useState(null);
     const [userData, setUserData] = React.useState(props.profile ? props.profile : {
@@ -138,7 +138,7 @@ const UserDetails = (props)=>{
     useEffect(()=>{
         if(props.profile) {
             setUserData(props.profile);
-            setSelectedDate(props.profile.dob);
+            setSelectedDate(new Date(props.profile.dob));
         }
     }, [props.profile]);
 
@@ -172,6 +172,7 @@ const UserDetails = (props)=>{
             alignItems="center"
             classes={{ root : classes.profilePicContainer }}
         >
+            {props.mode !== 'view'?
             <DropzoneArea
                 dropzoneText={previewURL? <img src={previewURL}/> :  "Profile Photo"}
                 acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
@@ -179,7 +180,11 @@ const UserDetails = (props)=>{
                 dropzoneClass={classes.profileImage}
                 maxFileSize={5000000}
                 onChange={handleFileChange}
-            />
+            /> : (
+                <div>
+                    PROFILE IMAGE GOES HERE
+                </div>
+                )}
         </Grid>
         <Grid item md={8} xs={12}>
         <Container component="main" maxWidth="sm">
@@ -191,7 +196,7 @@ const UserDetails = (props)=>{
                 noValidate
             >
                 <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={props.mode === 'add' ? 6 : 12}>
                         <TextField
                             variant="outlined"
                             required
@@ -202,10 +207,12 @@ const UserDetails = (props)=>{
                             name="email"
                             autoComplete="email"
                             value={userData['email']}
+                            disabled={props.mode === 'view'}
                             onChange={(e)=> { handleFieldChange(e, SignUpValidator[e.target.name].validator)} }
                         />
                         {ErrorMessageDisplay('email')}
                     </Grid>
+                    {props.mode === 'add' &&
                     <Grid item xs={12} md={6}>
                         <TextField
                             variant="outlined"
@@ -221,7 +228,7 @@ const UserDetails = (props)=>{
                         />
                         {ErrorMessageDisplay('password')}
                     </Grid>
-
+                    }
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <Grid container justify="space-around" className={classes.dateOfBirthWrapper}>
                             <KeyboardDatePicker
@@ -231,6 +238,7 @@ const UserDetails = (props)=>{
                                 format="MM/dd/yyyy"
                                 value={selectedDate}
                                 onChange={handleDateChange}
+                                disabled={props.mode === 'view'}
                                 InputLabelProps={{
                                     shrink : false,
                                     classes : { root : classes.dob}
@@ -249,6 +257,7 @@ const UserDetails = (props)=>{
                             name="contactNumber"
                             label="Contact Number"
                             id="contactNumber"
+                            disabled={props.mode === 'view'}
                             onChange={(e)=> { handleFieldChange(e, SignUpValidator[e.target.name].validator)} }
                             error={isErrorState('contactNumber')}
                         />
@@ -263,6 +272,7 @@ const UserDetails = (props)=>{
                             label="Address"
                             name="address"
                             value={userData['address']}
+                            disabled={props.mode === 'view'}
                             onChange={handleFieldChange}
                             error={isErrorState('address')}
                         />
@@ -275,6 +285,7 @@ const UserDetails = (props)=>{
                             id="securityAns1"
                             name="securityAns1"
                             fullWidth
+                            disabled={props.mode === 'view'}
                             label="Which school did you attend?"
                             onChange={handleFieldChange}
                             value={userData['securityAns1']}
@@ -289,6 +300,7 @@ const UserDetails = (props)=>{
                             id="securityAns2"
                             name="securityAns2"
                             fullWidth
+                            disabled={props.mode === 'view'}
                             label="Where were you born?"
                             onChange={handleFieldChange}
                             value={userData['securityAns2']}
@@ -303,6 +315,7 @@ const UserDetails = (props)=>{
                             id="securityAns3"
                             name="securityAns3"
                             fullWidth
+                            disabled={props.mode === 'view'}
                             label="Your first pet's name?"
                             onChange={handleFieldChange}
                             value={userData['securityAns3']}
@@ -310,32 +323,41 @@ const UserDetails = (props)=>{
                         />
                         {ErrorMessageDisplay('securityAns3')}
                     </Grid>
+                    {props.mode === 'add' &&
+                        <Grid item xs={12}>
+                            <FormControlLabel
+                                control={<Checkbox checked={agreeToTerms} onChange={switchAgreeToTerms} color="primary" />}
+                                label="I understand this is a jetcake coding test website"
+                            />
+                        </Grid>
+                    }
 
-                    <Grid item xs={12}>
-                        <FormControlLabel
-                            control={<Checkbox checked={agreeToTerms} onChange={switchAgreeToTerms} color="primary" />}
-                            label="I understand this is a jetcake coding test website"
-                        />
-                    </Grid>
                 </Grid>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                    disabled={!agreeToTerms || props.isLoading}
-                >
-                    {!props.isLoading && 'Sign Up'}
-                    {props.isLoading && <CircularProgressStyled size={24} />}
-                </Button>
-                <Grid container justify="flex-end">
-                    <Grid item>
-                        <Link href="#" variant="body2">
-                            Already have an account? Sign in
-                        </Link>
+                {props.mode !== 'view' &&
+                <>
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        className={classes.submit}
+                        disabled={props.mode === 'add' ? !agreeToTerms || props.isLoading : props.isLoading}
+                    >
+                        {!props.isLoading && (props.mode === 'add' ? 'Sign Up' : 'Update Profile')}
+                        {props.isLoading && <CircularProgressStyled size={24} />}
+                    </Button>
+                    {props.mode === 'add' &&
+                    <Grid container justify="flex-end">
+                        <Grid item>
+                            <Link href="#" variant="body2">
+                                Already have an account? Sign in
+                            </Link>
+                        </Grid>
                     </Grid>
-                </Grid>
+                    }
+
+                </>}
+
             </form>
             </div>
         </Container>
