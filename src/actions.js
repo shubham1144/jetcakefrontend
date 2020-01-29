@@ -40,3 +40,46 @@ export function signinFailure(message) {
     }
 }
 
+export function getProfile(payload) {
+    return {
+        type : 'INITIATE_GET_PROFILE',
+        payload
+    }
+}
+
+export function getProfileSuccess(payload) {
+    return {
+        type : 'GET_PROFILE_SUCCESS',
+        user : payload.user
+    }
+}
+
+export function getProfileFailure(message) {
+    return {
+        type : 'GET_PROFILE_FAILURE',
+        message
+    }
+}
+
+export function updateProfile(payload) {
+    return {
+        type : 'INITIATE_UPDATE_PROFILE',
+        payload
+    }
+}
+
+export function updateProfileSuccess(payload) {
+    return {
+        type : 'UPDATE_PROFILE_SUCCESS',
+        payload
+    }
+}
+
+export function updateProfileFailure(message) {
+    return {
+        type : 'UPDATE_PROFILE_FAILURE',
+        message
+    }
+}
+
+

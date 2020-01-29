@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Snackbar } from '@material-ui/core'
 import MuiAlert from '@material-ui/lab/Alert';
 import { connect } from 'react-redux';
-import { signup } from './actions';
+import { getProfile, updateProfile } from './actions';
 import UserDetails from './userDetails';
 
 
@@ -18,10 +18,9 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const SignUp = (props) => {
+const Profile = (props) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
-
     useEffect(()=>{
         if(props.message) {
             setOpen(true);
@@ -29,6 +28,12 @@ const SignUp = (props) => {
             setOpen(false);
         }
     }, [props.message]);
+
+    useEffect(()=>{
+        props.getProfile({
+            userId : 2
+        });
+    }, []);
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -48,7 +53,9 @@ const SignUp = (props) => {
                 </Alert>
             </Snackbar>}
             <UserDetails
-                onSuccess={props.signup}
+                mode={'view'}
+                onSuccess={props.updateProfile}
+                profile={props.profile}
             />
         </Grid>
     );
@@ -57,14 +64,16 @@ const SignUp = (props) => {
 const mapStateToProps = function(state) {
     return {
         isLoading: state.isLoading,
-        message: state.message
+        message: state.message,
+        profile: state.profile
     }
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        signup: data => dispatch(signup(data)),
+        getProfile: data => dispatch(getProfile(data)),
+        updateProfile: data => dispatch(updateProfile(data)),
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

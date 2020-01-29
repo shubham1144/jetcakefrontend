@@ -4,6 +4,7 @@ import './App.css';
 import SignUp from './Signup';
 import Header from './Header';
 import Home from './Home';
+import Profile from './Profile';
 import SignIn from './SignIn';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -125,6 +126,9 @@ function App() {
                     </Route>
                     <Route path="/signup">
                         <SignUp />
+                    </Route>
+                    <Route path="/profile">
+                        <Profile />
                     </Route>
                     <Route path="/">
                         <Home />

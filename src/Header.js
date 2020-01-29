@@ -44,7 +44,7 @@ const Header = (props) => {
                 </Typography>
                 {loggedIn ? (
                     <>
-                        <Link to="/signup">
+                        <Link to="/profile">
                             <Button href="#" color="primary" variant="outlined">
                                 profile
                             </Button>
