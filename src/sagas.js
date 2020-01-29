@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
 import axios from 'axios';
-import { signupSuccess, signupFailure } from './actions';
+import { signupSuccess, signupFailure, signinSuccess, signinFailure } from './actions';
 
 function SignUpApi(payload) {
     var bodyFormData = new FormData();
@@ -26,8 +26,30 @@ function* signupUser({payload}) {
     }
 }
 
+
+function SignInApi(payload) {
+    return axios.request({
+        method: 'post',
+        url: 'https://jetcakeapi.azurewebsites.net/users/signin',
+        data: payload,
+    });
+}
+
+function* signinUser({payload}) {
+    try {
+        let { signInResponse } = yield call(SignInApi, payload);
+
+        yield put (signinSuccess(signInResponse));
+
+    } catch (e) {
+        let { message } = e.response.data;
+        yield put(signinFailure(message));
+    }
+}
+
 function* mySaga() {
     yield takeLatest("INITIATE_SIGNUP", signupUser);
+    yield takeLatest("INITIATE_SIGNIN", signinUser);
 }
 
 export default mySaga;

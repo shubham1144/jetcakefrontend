@@ -2,13 +2,12 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import SignUp from './Signup';
+import Header from './Header';
 import Home from './Home';
 import SignIn from './SignIn';
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
+
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -118,44 +117,19 @@ function App() {
         <Router>
         <React.Fragment>
             <CssBaseline />
-            <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
-                <Toolbar className={classes.toolbar}>
-                    <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
-
-                        <RouterLink to="/">
-                            JetCake
-                        </RouterLink>
-                    </Typography>
-                    <RouterLink to="/signup">
-                        <Button href="#" color="primary" variant="outlined" className={classes.link}>
-                            Signup
-                        </Button>
-                    </RouterLink>
-                    <RouterLink to="/signin">
-                    <Button href="#" color="primary" variant="outlined" className={classes.link}>
-                        Login
-                    </Button>
-                    </RouterLink>
-                </Toolbar>
-            </AppBar>
+            <Header />
             <main>
-
-
-                    <Switch>
-                        <Route path="/signin">
-                            <SignIn />
-                        </Route>
-                        <Route path="/signup">
-                            <SignUp />
-                        </Route>
-                        <Route path="/">
-                            <Home />
-                        </Route>
-
-
-                    </Switch>
-
-
+                <Switch>
+                    <Route path="/signin">
+                        <SignIn />
+                    </Route>
+                    <Route path="/signup">
+                        <SignUp />
+                    </Route>
+                    <Route path="/">
+                        <Home />
+                    </Route>
+                </Switch>
             </main>
             {/* Footer */}
             <Container maxWidth="md" component="footer" className={classes.footer}>

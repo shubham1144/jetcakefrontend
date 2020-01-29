@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles, withStyles} from '@material-ui/core/styles';
 import { Container, Grid, Link, Checkbox, FormControlLabel,
     TextField, CssBaseline, FormHelperText, Button, CircularProgress, Snackbar
 } from '@material-ui/core'
@@ -20,6 +20,12 @@ import { signup } from './actions';
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
+
+const CircularProgressStyled = withStyles({
+    colorPrimary: {
+        color: '#ffffff',
+    },
+})(CircularProgress);
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -102,16 +108,15 @@ const SignUp = (props) => {
     useEffect(()=>{
         if(props.message) {
             setOpen(true);
+        } else {
+            setOpen(false);
         }
     }, [props.message]);
-
-
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
-
         setOpen(false);
     };
 
@@ -134,10 +139,12 @@ const SignUp = (props) => {
         userData[name] = value;
         setUserData(userData);
         if(validator && !validator(value)) {
-            console.log("the vaidator value is : ", validator(value))
             errorData[name] = SignUpValidator[name].validatorMessage || SignUpValidator[name].message;
             setErrorData({...errorData});
+        } else {
+            delete errorData[name];
         }
+        setErrorData({...errorData});
     };
 
     const isErrorState = (value) => {
@@ -148,11 +155,12 @@ const SignUp = (props) => {
         return isErrorState(value) ?  (
             <FormHelperText id="email-helper-text">{errorData[value]}</FormHelperText>
         ) : null;
-    }
+    };
 
     const switchAgreeToTerms = (event) => {
         setAgreeToTerms(event.target.checked);
-    }
+    };
+
     const onSignUpSubmit = (e) => {
         e.preventDefault();
         const userPayload = {
@@ -172,7 +180,6 @@ const SignUp = (props) => {
             console.log("Making an api call here", userPayload);
             props.signup(userPayload);
         }
-
     };
 
     return (
@@ -341,10 +348,10 @@ const SignUp = (props) => {
                                 variant="contained"
                                 color="primary"
                                 className={classes.submit}
-                                disabled={!agreeToTerms}
+                                disabled={!agreeToTerms || props.isLoading}
                             >
                                 {!props.isLoading && 'Sign Up'}
-                                {props.isLoading && <CircularProgress size={24} />}
+                                {props.isLoading && <CircularProgressStyled size={24} />}
                             </Button>
                             <Grid container justify="flex-end">
                                 <Grid item>

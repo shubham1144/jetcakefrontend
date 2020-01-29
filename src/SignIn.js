@@ -1,17 +1,35 @@
-import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
+import React, {useEffect} from 'react';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import {signin} from "./actions";
+import {connect} from "react-redux";
+import MuiAlert from '@material-ui/lab/Alert';
+import { useHistory } from "react-router-dom";
+
+import {
+    Avatar,
+    Button,
+    CssBaseline,
+    TextField,
+    Link,
+    Grid,
+    Typography,
+    Container,
+    FormHelperText,
+    Snackbar,
+    CircularProgress
+} from '@material-ui/core';
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+
+const CircularProgressStyled = withStyles({
+    colorPrimary: {
+        color: '#ffffff',
+    },
+})(CircularProgress);
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -33,11 +51,99 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function SignIn() {
+const SignIn = (props) => {
+    let history = useHistory();
     const classes = useStyles();
+    const [userData, setUserData] = React.useState({
+        email : '',
+        password: ''
+    });
+    const [errorData, setErrorData] = React.useState({});
+    const [open, setOpen] = React.useState(false);
+    const SignInValidator = {
+        email : {
+            message : "We'll never share your email.",
+            validator : (email)=>{
+                var re = /\S+@\S+\.\S+/;
+                return re.test(email);
+            },
+            validatorMessage : "provide an valid email"
+        }
+    };
+
+    useEffect(()=>{
+        if(props.message) {
+            setOpen(true);
+        } else {
+            setOpen(false);
+        }
+    }, [props.message]);
+
+    useEffect(()=>{
+        if(props.loggedIn) {
+            //Redirect to dashboard home
+            console.log("Need to redirect the user to home page");
+            localStorage.setItem("loggedIn", true);
+            history.push("/");
+        }
+    }, [props.loggedIn]);
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
+
+    const handleFieldChange = (event, validator) => {
+        const { name, value } = event.target;
+        userData[name] = value;
+        setUserData(userData);
+        if(validator && !validator(value)) {
+            errorData[name] = SignInValidator[name].validatorMessage || SignInValidator[name].message;
+        } else {
+            delete errorData[name];
+        }
+        setErrorData({...errorData});
+    };
+
+    const isErrorState = (value) => {
+        return errorData[value] !== undefined;
+    };
+
+    const ErrorMessageDisplay = (value) => {
+        return isErrorState(value) ?  (
+            <FormHelperText id="email-helper-text">{errorData[value]}</FormHelperText>
+        ) : null;
+    };
+
+    const onSignInSubmit = (e) => {
+        e.preventDefault();
+        Object.keys(userData).map((key)=>{
+            if(userData[key] === '' || !userData[key]){
+                errorData[key] = "Field is required";
+            }
+        });
+        if(Object.keys(errorData).length > 0) {
+            console.log("the error data length is : ", errorData);
+            setErrorData({...errorData});
+        } else {
+            console.log("Making an api call here", userData);
+            props.signin(userData);
+        }
+    };
 
     return (
         <Container component="main" maxWidth="xs">
+            {props.message && <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}
+                anchorOrigin={{
+                    vertical: 'top', horizontal: 'center'
+                }}>
+                <Alert onClose={handleClose} severity="success">
+                    {props.message}
+                </Alert>
+            </Snackbar>}
             <CssBaseline />
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
@@ -46,29 +152,35 @@ export default function SignIn() {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                <form className={classes.form} noValidate>
+                <form className={classes.form} noValidate onSubmit={onSignInSubmit}>
                     <TextField
                         variant="outlined"
                         margin="normal"
                         required
+                        error={isErrorState('email')}
                         fullWidth
                         id="email"
                         label="Email Address"
                         name="email"
                         autoComplete="email"
                         autoFocus
+                        onChange={(e)=> { handleFieldChange(e, SignInValidator[e.target.name].validator)} }
                     />
+                    {ErrorMessageDisplay('email')}
                     <TextField
                         variant="outlined"
                         margin="normal"
                         required
                         fullWidth
+                        error={isErrorState('password')}
                         name="password"
                         label="Password"
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        onChange={handleFieldChange}
                     />
+                    {ErrorMessageDisplay('password')}
 
                     <Button
                         type="submit"
@@ -76,8 +188,10 @@ export default function SignIn() {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
+                        disabled={props.isLoading}
                     >
-                        Sign In
+                        {!props.isLoading && 'Sign In'}
+                        {props.isLoading && <CircularProgressStyled size={24} />}
                     </Button>
                     <Grid container>
                         <Grid item>
@@ -91,3 +205,19 @@ export default function SignIn() {
         </Container>
     );
 }
+
+const mapStateToProps = function(state) {
+    return {
+        isLoading: state.isLoading,
+        message: state.message,
+        loggedIn: state.loggedIn
+    }
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        signin: data => dispatch(signin(data)),
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn);
