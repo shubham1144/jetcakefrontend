@@ -137,8 +137,16 @@ const UserDetails = (props)=>{
 
     useEffect(()=>{
         if(props.profile) {
-            setUserData(props.profile);
+            let userProfileData = {...props.profile};
+            //delete userProfileData['image'];
+            setUserData(userProfileData);
             setSelectedDate(new Date(props.profile.dob));
+            // const reader = new FileReader();
+            // reader.readAsDataURL(props.profile.profileImage);
+            // reader.onloadend = function() {
+            //     // result includes identifier 'data:image/png;base64,' plus the base64 data
+            //     setpreviewURL(reader.result);
+            // }
         }
     }, [props.profile]);
 
