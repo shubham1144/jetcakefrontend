@@ -26,7 +26,7 @@ function Copyright() {
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
             <RouterLink color="inherit" to="/">
-                Your Website
+                Shubham Chodankar
             </RouterLink>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -95,21 +95,17 @@ const useStyles = makeStyles(theme => ({
 
 const footers = [
     {
-        title: 'Company',
-        description: ['Team', 'History', 'Contact us', 'Locations'],
+        title: 'Why me?',
+        description: ['Team Player', 'Quick features', 'Quality', '4+ Experienced'],
     },
     {
-        title: 'Features',
-        description: ['Cool stuff', 'Random feature', 'Team feature', 'Developer stuff', 'Another one'],
+        title: 'Core Skill box',
+        description: ['React.js', 'Node.js', 'Nosql/Sql Databases', 'Optimization'],
     },
     {
-        title: 'Resources',
-        description: ['Resource', 'Resource name', 'Another resource', 'Final resource'],
-    },
-    {
-        title: 'Legal',
-        description: ['Privacy policy', 'Terms of use'],
-    },
+        title: 'Additional box',
+        description: ['Quick Deployments', 'Bug Developer', 'Smile', ':)']
+    }
 ];
 
 function App() {
