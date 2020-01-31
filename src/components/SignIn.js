@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import {signin} from "./actions";
+import {signin} from "../container/actions";
 import {connect} from "react-redux";
 import MuiAlert from '@material-ui/lab/Alert';
 import { useHistory } from "react-router-dom";
@@ -26,7 +26,6 @@ import {
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
-
 
 const CircularProgressStyled = withStyles({
     colorPrimary: {
@@ -126,10 +125,8 @@ const SignIn = (props) => {
             }
         });
         if(Object.keys(errorData).length > 0) {
-            console.log("the error data length is : ", errorData);
             setErrorData({...errorData});
         } else {
-            console.log("Making an api call here", userData);
             props.signin(userData);
         }
     };
@@ -140,7 +137,7 @@ const SignIn = (props) => {
                 anchorOrigin={{
                     vertical: 'top', horizontal: 'center'
                 }}>
-                <Alert onClose={handleClose} severity="success">
+                <Alert onClose={handleClose} severity={props.message && !props.loggedIn ? "error": "success"}>
                     {props.message}
                 </Alert>
             </Snackbar>}

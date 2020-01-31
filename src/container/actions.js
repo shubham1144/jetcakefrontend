@@ -5,6 +5,12 @@ export function signup(payload) {
     }
 }
 
+export function signupReset() {
+    return {
+        type : 'RESET_SIGNUP',
+    }
+}
+
 export function signupSuccess(payload) {
     return {
         type : 'SIGNUP_SUCCESS',

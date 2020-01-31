@@ -5,7 +5,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import { useHistory } from "react-router-dom";
 import MuiAlert from '@material-ui/lab/Alert';
 import { connect } from 'react-redux';
-import { getProfile, updateProfile } from './actions';
+import { getProfile, updateProfile } from '../container/actions';
 import UserDetails from './userDetails';
 
 
@@ -15,13 +15,17 @@ function Alert(props) {
 
 const useStyles = makeStyles(theme => ({
     paperMain: {
-        margin: theme.spacing(8),
-        marginTop : 0,
         padding: theme.spacing(2),
     },
     paperMainSkeleton: {
         width: "90%",
         padding: theme.spacing(2),
+    },
+    editButton:{
+        [theme.breakpoints.only('xs')]: {
+            marginBottom: theme.spacing(2)
+        },
+
     }
 }));
 
@@ -75,6 +79,7 @@ const Profile = (props) => {
                         type="submit"
                         variant="contained"
                         color="primary"
+                        className={classes.editButton}
                         onClick={editModeEnable}
                     >
                         Edit

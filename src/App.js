@@ -1,11 +1,11 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import SignUp from './Signup';
-import Header from './Header';
-import Home from './Home';
-import Profile from './Profile';
-import SignIn from './SignIn';
+
+import SignUp from './components/Signup';
+import Header from './components/Header';
+import Home from './components/Home';
+import Profile from './components/Profile';
+import SignIn from './components/SignIn';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
@@ -21,7 +21,7 @@ import {
     Link as RouterLink
 } from "react-router-dom";
 
-function Copyright() {
+const Copyright = () => {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
@@ -46,40 +46,6 @@ const useStyles = makeStyles(theme => ({
         a:{
             textDecoration: "none"
         }
-    },
-    appBar: {
-        borderBottom: `1px solid ${theme.palette.divider}`,
-    },
-    toolbar: {
-        flexWrap: 'wrap',
-    },
-    toolbarTitle: {
-        flexGrow: 1,
-    },
-    icon: {
-        marginRight: theme.spacing(2),
-    },
-    heroContent: {
-        backgroundColor: theme.palette.background.paper,
-        padding: theme.spacing(8, 0, 6),
-    },
-    heroButtons: {
-        marginTop: theme.spacing(4),
-    },
-    cardGrid: {
-        paddingTop: theme.spacing(8),
-        paddingBottom: theme.spacing(8),
-    },
-    card: {
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    cardMedia: {
-        paddingTop: '56.25%', // 16:9
-    },
-    cardContent: {
-        flexGrow: 1,
     },
     footer: {
         borderTop: `1px solid ${theme.palette.divider}`,
