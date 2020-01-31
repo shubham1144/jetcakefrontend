@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {Button, Grid, Snackbar} from '@material-ui/core'
 import Skeleton from '@material-ui/lab/Skeleton';
-
+import { useHistory } from "react-router-dom";
 import MuiAlert from '@material-ui/lab/Alert';
 import { connect } from 'react-redux';
 import { getProfile, updateProfile } from './actions';
@@ -26,6 +26,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Profile = (props) => {
+    let history = useHistory();
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [mode, setMode] = React.useState('view');
@@ -39,9 +40,12 @@ const Profile = (props) => {
     }, [props.message]);
 
     useEffect(()=>{
-        props.getProfile({
-            userId : 2
-        });
+        if(localStorage.getItem("loggedIn") == 'true') {
+            props.getProfile();
+        }else {
+            history.push('/')
+        }
+
     }, []);
 
     const handleClose = (event, reason) => {

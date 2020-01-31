@@ -40,3 +40,7 @@
 .MuiInputBase-input.Mui-disabled{
   color: black;
 }
+
+.MuiFormHelperText-root{
+  color : darkred !important;
+}

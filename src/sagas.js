@@ -7,6 +7,20 @@ import {
     updateProfileSuccess, updateProfileFailure
 } from './actions';
 
+const apiBaseUrl = 'https://jetcakeapi.azurewebsites.net';
+// Add a request interceptor
+axios.interceptors.request.use(function (config) {
+    // Do something before request is sent
+    const token = localStorage.getItem("token");
+    if ( token != null ) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+}, function (error) {
+    // Do something with request error
+    return Promise.reject(error);
+});
+
 function SignUpApi(payload) {
     var bodyFormData = new FormData();
     Object.keys(payload).forEach((key)=>{
@@ -14,7 +28,7 @@ function SignUpApi(payload) {
     });
     return axios.request({
         method: 'post',
-        url: 'https://jetcakeapi.azurewebsites.net/users/signup',
+        url: apiBaseUrl + '/users/signup',
         data: bodyFormData,
         headers: {'Content-Type': 'multipart/form-data' }
     });
@@ -35,7 +49,7 @@ function* signupUser({payload}) {
 function SignInApi(payload) {
     return axios.request({
         method: 'post',
-        url: 'https://jetcakeapi.azurewebsites.net/users/signin',
+        url: apiBaseUrl + '/users/signin',
         data: payload,
     });
 }
@@ -43,6 +57,9 @@ function SignInApi(payload) {
 function* signinUser({payload}) {
     try {
         let { data } = yield call(SignInApi, payload);
+        //Sets the token in localstorage
+        localStorage.setItem("loggedIn", true);
+        localStorage.setItem("token", data.data.token);
         yield put (signinSuccess(data));
 
     } catch (e) {
@@ -54,8 +71,7 @@ function* signinUser({payload}) {
 function GetProfileApi(payload) {
     return axios.request({
         method: 'get',
-        url: 'https://jetcakeapi.azurewebsites.net/users/profile',
-        params: payload
+        url: apiBaseUrl + '/users/profile'
     }).then(response => response.data);
 }
 
@@ -73,7 +89,7 @@ function* getProfile({payload}) {
 function UpdateProfileApi(payload) {
     return axios.request({
         method: 'put',
-        url: 'https://jetcakeapi.azurewebsites.net/users/profile',
+        url: apiBaseUrl + '/users/profile',
         data: payload
     });
 }

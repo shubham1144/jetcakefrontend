@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { signup } from './actions';
 import UserDetails from './userDetails';
 
-
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }

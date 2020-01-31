@@ -19,7 +19,7 @@ function reducer(state = {
         case 'INITIATE_GET_PROFILE':
             return {...state, isLoading: true, message: null};
         case 'GET_PROFILE_SUCCESS':
-            return {...state, isLoading: false, message: null, profile: action.user};
+            return {...state, isLoading: false, message: null, profile: action.user, };
         case 'GET_PROFILE_FAILURE':
             return {...state, isLoading: false, message: action.message};
         case 'INITIATE_UPDATE_PROFILE':

@@ -7,11 +7,14 @@ import MuiAlert from '@material-ui/lab/Alert';
 import { useHistory } from "react-router-dom";
 
 import {
+    Link as RouterLink
+} from "react-router-dom";
+
+import {
     Avatar,
     Button,
     CssBaseline,
     TextField,
-    Link,
     Grid,
     Typography,
     Container,
@@ -81,10 +84,7 @@ const SignIn = (props) => {
 
     useEffect(()=>{
         if(props.loggedIn) {
-            //Redirect to dashboard home
-            console.log("Need to redirect the user to home page");
-            localStorage.setItem("loggedIn", true);
-            history.push("/");
+            history.push("/profile");
         }
     }, [props.loggedIn]);
 
@@ -195,9 +195,9 @@ const SignIn = (props) => {
                     </Button>
                     <Grid container>
                         <Grid item>
-                            <Link href="#" variant="body2">
+                            <RouterLink to={'/signup'} href="#" variant="body2">
                                 {"Don't have an account? Sign Up"}
-                            </Link>
+                            </RouterLink>
                         </Grid>
                     </Grid>
                 </form>

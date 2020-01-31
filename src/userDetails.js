@@ -5,17 +5,19 @@ import {
     FormControlLabel,
     FormHelperText,
     Grid,
-    Link,
     TextField,
 } from "@material-ui/core";
 import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
-
+import {
+    Link as RouterLink
+} from "react-router-dom";
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import React, {useEffect} from "react";
 import {DropzoneArea} from "material-ui-dropzone";
 import {makeStyles, withStyles} from '@material-ui/core/styles';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import profileImg from "./profile.png";
 
 const CircularProgressStyled = withStyles({
     colorPrimary: {
@@ -54,7 +56,7 @@ const useStyles = makeStyles(theme => ({
         background : "none"
     },
     profilePicContainer : {
-        marginTop: theme.spacing(24),
+        marginTop: "5rem",
     }
 }));
 
@@ -95,6 +97,10 @@ const UserDetails = (props)=>{
     const [errorData, setErrorData] = React.useState({});
     const handleDateChange = date => {
         setSelectedDate(date);
+        if(isErrorState('dob')) {
+            delete errorData['dob'];
+            setErrorData({...errorData});
+        }
     };
 
     const handleFileChange = files => {
@@ -138,15 +144,13 @@ const UserDetails = (props)=>{
     useEffect(()=>{
         if(props.profile) {
             let userProfileData = {...props.profile};
-            //delete userProfileData['image'];
+            if(props.profile.profileImage) {
+                setpreviewURL('data:image/png;base64,' + props.profile.profileImage);
+            }
+            delete userProfileData['dob'];
+            delete userProfileData['profileImage'];
             setUserData(userProfileData);
             setSelectedDate(new Date(props.profile.dob));
-            // const reader = new FileReader();
-            // reader.readAsDataURL(props.profile.profileImage);
-            // reader.onloadend = function() {
-            //     // result includes identifier 'data:image/png;base64,' plus the base64 data
-            //     setpreviewURL(reader.result);
-            // }
         }
     }, [props.profile]);
 
@@ -190,7 +194,7 @@ const UserDetails = (props)=>{
                 onChange={handleFileChange}
             /> : (
                 <div>
-                    PROFILE IMAGE GOES HERE
+                    <img width={'60%'} src={previewURL || profileImg}/>
                 </div>
                 )}
         </Grid>
@@ -255,6 +259,7 @@ const UserDetails = (props)=>{
                                     'aria-label': 'change date',
                                 }}
                             />
+                            {ErrorMessageDisplay('dob')}
                         </Grid>
                     </MuiPickersUtilsProvider>
                     <Grid item xs={12}>
@@ -357,9 +362,9 @@ const UserDetails = (props)=>{
                     {props.mode === 'add' &&
                     <Grid container justify="flex-end">
                         <Grid item>
-                            <Link href="#" variant="body2">
+                            <RouterLink to={'/signin'} href="#" variant="body2">
                                 Already have an account? Sign in
-                            </Link>
+                            </RouterLink>
                         </Grid>
                     </Grid>
                     }

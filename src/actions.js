@@ -50,7 +50,7 @@ export function getProfile(payload) {
 export function getProfileSuccess(payload) {
     return {
         type : 'GET_PROFILE_SUCCESS',
-        user : payload.user
+        user : {...payload.user, profileImage : payload.profileImage}
     }
 }
 
