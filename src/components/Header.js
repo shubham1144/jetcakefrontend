@@ -4,6 +4,8 @@ import {connect} from "react-redux";
 import { Typography, Button, AppBar, Toolbar, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from "react-router-dom";
+import { resetProfile } from '../container/actions';
+
 const useStyles = makeStyles(theme => ({
     appBar: {
         borderBottom: `1px solid ${theme.palette.divider}`,
@@ -42,11 +44,12 @@ const Header = (props) => {
     }, [props.loggedIn]);
 
     const signOut = () => {
-        //@todo : Remove the profile from store
         localStorage.removeItem("token");
         localStorage.removeItem("loggedIn");
+        props.resetProfile();
         history.push("/");
         setLoggedIn(false);
+
     };
 
     return (
@@ -101,9 +104,16 @@ const Header = (props) => {
 
 const mapStateToProps = function(state) {
     return {
-        loggedIn: state.loggedIn
+        loggedIn: state.loggedIn,
     }
 };
 
-export default connect(mapStateToProps, null)(Header);
+const mapDispatchToProps = dispatch => {
+    return {
+        resetProfile: () => dispatch(resetProfile())
+    }
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
 

@@ -20,6 +20,7 @@
 
 .MuiInputBase-input.Mui-disabled{
   color: black;
+  cursor: not-allowed;
 }
 
 .MuiFormHelperText-root{

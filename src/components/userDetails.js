@@ -236,7 +236,7 @@ const UserDetails = (props)=>{
                                     name="email"
                                     autoComplete="email"
                                     value={userData['email']}
-                                    disabled={props.mode === 'view'}
+                                    disabled={true}
                                     onChange={(e)=> { handleFieldChange(e, SignUpValidator[e.target.name].validator)} }
                                 />
                                 {ErrorMessageDisplay('email')}
@@ -287,6 +287,7 @@ const UserDetails = (props)=>{
                                     name="contactNumber"
                                     label="Contact Number"
                                     id="contactNumber"
+                                    value={userData['contactNumber']}
                                     disabled={props.mode === 'view'}
                                     onChange={(e)=> { handleFieldChange(e, SignUpValidator[e.target.name].validator)} }
                                     error={isErrorState('contactNumber')}

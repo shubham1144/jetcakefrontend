@@ -87,10 +87,15 @@ function* getProfile({payload}) {
 }
 
 function UpdateProfileApi(payload) {
+    var bodyFormData = new FormData();
+    Object.keys(payload).forEach((key)=>{
+        bodyFormData.set(key, payload[key])
+    });
     return axios.request({
         method: 'put',
         url: apiBaseUrl + '/users/profile',
-        data: payload
+        data : bodyFormData,
+        headers: {'Content-Type': 'multipart/form-data' }
     });
 }
 

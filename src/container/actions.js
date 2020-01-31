@@ -11,6 +11,12 @@ export function signupReset() {
     }
 }
 
+export function resetProfile() {
+    return {
+        type : 'RESET_PROFILE',
+    }
+}
+
 export function signupSuccess(payload) {
     return {
         type : 'SIGNUP_SUCCESS',

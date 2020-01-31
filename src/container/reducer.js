@@ -19,6 +19,8 @@ function reducer(state = {
             return {...state, isLoading: false, message: null, loggedIn : true};
         case 'SIGNIN_FAILURE':
             return {...state, isLoading: false, message: action.message};
+        case 'RESET_PROFILE':
+                return {...state, isLoading: false, message: null, profile: null};
         case 'INITIATE_GET_PROFILE':
             return {...state, isLoading: true, message: null};
         case 'GET_PROFILE_SUCCESS':

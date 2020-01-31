@@ -47,7 +47,7 @@ const Profile = (props) => {
         if(localStorage.getItem("loggedIn") == 'true') {
             props.getProfile();
         }else {
-            history.push('/')
+            history.push('/');
         }
 
     }, []);
